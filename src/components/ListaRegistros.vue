@@ -355,9 +355,9 @@
         },
         
         async getBid(){
-            //this.parametro = this.$route.params.id;  
-            if(this.$route.params.id){
-                await axios.get(`https://strapi-production-f692.up.railway.app/api/bids?filters[key][$eq]=${this.$route.params.id}&populate=deep`)
+            this.parametro = this.$route.path.replace('/','');  
+            if(this.parametro){
+                await axios.get(`https://strapi-production-f692.up.railway.app/api/bids?filters[key][$eq]=${this.parametro}&populate=deep`)
                 .then(response => {
                 this.bid = response.data.data[0].attributes;
                 this.bid_id = response.data.data[0].id;
@@ -372,9 +372,12 @@
             }
         }
     },
-    created() {
-        console.log(this.$route.params.id)
+    mounted(){
         this.getBid()
+    },
+    created() {
+        
+        
     },
   };
   </script>
