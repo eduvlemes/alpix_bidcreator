@@ -87,8 +87,8 @@
                             <strong>{{ bid_total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</strong>
                             <b>{{bid.installments}}x</b> de <b>{{ (bid_total / bid.installments).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b><br><small>sem juros</small>
                             <br><br>
-                            <a class="payLink" :href="'https://api.whatsapp.com/send/?phone=5511989297291&text=*[Link de Pagamento]*%0A%0AOlá! Gostaria de solicitar o link de pagamento para a proposta *' + (bid_id + 500) + '*%0A*Valor:* '+bid.installments+ 'x de ' + (bid_total / bid.installments).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) + ' sem juros%0A'" target="_blank">
-                                <i class="fa fa-whatsapp"></i>Solicitar Link via WhatsApp
+                            <a class="payLink" :href="pagarmePaymentLink" target="_blank">
+                                <i class="fa fa-credit-card"></i>Pagar com Cartão de Crédito
                             </a>
 
                         </div>
@@ -96,7 +96,7 @@
                             ou
                         </div>
                         <div class="card-pix">
-                            <img v-if="qrCodePixImage" :src="qrCodePixImage"/>
+                            <img v-if="bid.payment_base64" :src="bid.payment_base64"/>
                             <strong>{{ (bid_total * bid_atsight).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</strong>
                             <small>{{(bid_total - (bid_total * bid_atsight)).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }} de desconto</small>
                             <br>
@@ -271,7 +271,8 @@
 <script>
   import axios from 'axios'
   import { QrCodePix } from 'qrcode-pix'
-  import marked from 'marked';
+  import marked from 'marked'
+  import pagarme from 'pagarme'
 
   
   export default {
@@ -291,16 +292,74 @@
         loading:false,
         paymentViable:false,
         qrCodePix : false,
-        qrCodePixImage:false
+        qrCodePixImage:false,
+        pagarmePaymentLink : false,
       };
     },
     methods:{
+        formataValorPagarme(valor){
+            let pagarmeAmount = valor.toString()
+            pagarmeAmount = pagarmeAmount.includes('.') ? pagarmeAmount.replace('.','') : pagarmeAmount + '00'
+            pagarmeAmount = parseInt(pagarmeAmount)
+            return pagarmeAmount
+        },
         async atualizarProposta(aceitou){
             this.loading = true
-        
+
+            let items = []
+
+            for(let i in this.bid.services){
+                items.push({
+                    id: this.bid.services[i].id,
+                    title: this.bid.services[i].service.data.attributes.title,
+                    unit_price: this.bid.services[i].price ? this.bid.services[i].price : this.bid.services[i].service.data.attributes.price,
+                    quantity: 1,
+                    tangible: false
+                })
+            }
+            
+            if(aceitou){
+                let items = []
+
+                for(let i in this.bid.services){
+                    items.push({
+                        id: this.bid.services[i].id.toString(),
+                        title: this.bid.services[i].service.data.attributes.title,
+                        unit_price: this.formataValorPagarme(this.bid.services[i].price ? this.bid.services[i].price : this.bid.services[i].service.data.attributes.price),
+                        quantity: 1,
+                        tangible: false
+                    })
+                }
+
+                let PAGARMEAPIKEY = "ak_live_nCn5HCIpU4IYNcHEegKwPYEx2Ob49J"
+               
+                
+                await axios.post(`https://api.pagar.me/1/payment_links/?api_key=${PAGARMEAPIKEY}`,{
+                    name: '#'+ (this.bid_id + 500) + '_' + this.bid.client.data.attributes.name.toUpperCase().replaceAll(' ','_'),
+                    amount : this.formataValorPagarme(this.bid_total),
+                    items : items,
+                    payment_config:{
+                        boleto:{enabled:false},
+                        credit_card:{
+                            enabled:true,
+                            free_installments: this.bid.installments,
+                            max_installments: this.bid.installments
+                        },
+                        default_payment_method: "credit_card"
+                    },
+                    max_orders:1
+                })
+                .then(response => {
+                    console.log(response)
+                    this.pagarmePaymentLink = response.data.url
+                })
+            }
+
             await axios.put(`https://strapi-production-f692.up.railway.app/api/bids/${this.bid_id}`,{
                 data: {
-                    accepted:aceitou
+                    accepted:aceitou,
+                    payment_base64 : aceitou && this.qrCodePixImage ? this.qrCodePixImage : '',
+                    payment_link : aceitou && this.pagarmePaymentLink ? this.pagarmePaymentLink : ''
                 }
             })
             .then(response => {
@@ -344,21 +403,23 @@
             const ano = this.bid_delivery_date.getFullYear()
             this.bid_delivery_date_formated  = `${dia}/${mes}/${ano}`
 
-            this.qrCodePix = await QrCodePix({
-                version: '01',
-                key: '35810898000148', //or any PIX key
-                name: 'Eduardo Vieira Lemes',
-                city: 'SAO PAULO',
-                transactionId: `${this.bid_id + 500}`, //max 25 characters
-                message: `Prazo de entrega estimado: ${dia}/${mes}/${ano}`,
-                cep: '01311904',
-                value: (this.bid_total * this.bid_atsight),
-            });
+            if(!this.bid.payment_base64){
+                this.qrCodePix = await QrCodePix({
+                    version: '01',
+                    key: '35810898000148', //or any PIX key
+                    name: 'Eduardo Vieira Lemes',
+                    city: 'SAO PAULO',
+                    transactionId: `${this.bid_id + 500}`, //max 25 characters
+                    message: `Prazo de entrega estimado: ${dia}/${mes}/${ano}`,
+                    cep: '01311904',
+                    value: (this.bid_total * this.bid_atsight),
+                });
 
             //console.log(qrCodePix.base64); // '00020101021126510014BR.GOV.BCB.PIX...'
             //this.qrCodePix = 
             
-            this.qrCodePixImage = await this.qrCodePix.base64()
+                this.qrCodePixImage = await this.qrCodePix.base64()
+            }
 
             
         },
@@ -373,6 +434,7 @@
                 this.bid = response.data.data[0].attributes;
                 this.bid_id = response.data.data[0].id;
                 this.paymentViable = this.bid.accepted 
+                this.pagarmePaymentLink = this.bid.payment_link 
                 //console.log(this.bid)
                 })
                 .catch(error => {
@@ -380,6 +442,39 @@
                 });
 
                 this.calcTotals()
+            }
+
+            if(this.parametro == 123456){
+                // let PAGARMEAPIKEY = ""
+                // let PAGARMECKEY = ""
+                let PAGARMEAPIKEY = "ak_live_nCn5HCIpU4IYNcHEegKwPYEx2Ob49J"
+                // let PAGARMECKEY = "ek_live_dfOrhOGhS65igcwCps5S8gFMNdBMWN"
+                
+                // await pagarme.client.connect({ 
+                //     api_key: PAGARMEAPIKEY,
+                // })
+                // .then(client => client.paymentLinks.create({
+                //     amount : this.bid_total,
+                //     items : items,
+                //     payment_config:{
+                //         boleto:{enabled:false},
+                //         credit_card:{
+                //             enabled:true,
+                //             free_installments: this.bid_installments,
+                //             max_installments: this.bid_installments
+                //         },
+                //         default_payment_method: "credit_card"
+                //     },
+                //     max_orders:1
+                // }).then(response => console.log(response))
+                // )
+                
+                // .then(paymentLinks => console.log(paymentLinks))
+                // .catch(error => console.log(JSON.stringify(error)))
+
+                
+
+                
             }
         }
     },
