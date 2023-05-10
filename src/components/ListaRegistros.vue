@@ -292,7 +292,7 @@
         async atualizarProposta(aceitou){
             this.loading = true
         
-            await axios.get(`http://localhost:1337/api/bids/${this.bid_id}`,{
+            await axios.get(`https://strapi-production-f692.up.railway.app/api/bids/${this.bid_id}`,{
                 data: {
                     accepted:aceitou
                 }
@@ -357,7 +357,7 @@
         async getBid(){
             //this.parametro = this.$route.params.id;  
             if(this.$route.params.id){
-                await axios.get(`http://localhost:1337/api/bids?filters[key][$eq]=${this.$route.params.id}&populate=deep`)
+                await axios.get(`https://strapi-production-f692.up.railway.app/api/bids?filters[key][$eq]=${this.$route.params.id}&populate=deep`)
                 .then(response => {
                 this.bid = response.data.data[0].attributes;
                 this.bid_id = response.data.data[0].id;
