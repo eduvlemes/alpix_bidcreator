@@ -292,7 +292,7 @@
         async atualizarProposta(aceitou){
             this.loading = true
         
-            await axios.get(`https://strapi-production-f692.up.railway.app/api/bids/${this.bid_id}`,{
+            await axios.put(`https://strapi-production-f692.up.railway.app/api/bids/${this.bid_id}`,{
                 data: {
                     accepted:aceitou
                 }
