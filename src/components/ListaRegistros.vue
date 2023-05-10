@@ -46,9 +46,9 @@
                     <tbody>
                     <tr v-for="(servico, index) in bid.services" :key="index">
                         <td>{{ servico.service.data && servico.service.data.attributes.title }}</td>
-                        <td>{{ servico.service.data && servico.service.data.attributes.description }}</td>
+                        <td v-html="markdownToHtml(servico.service.data && servico.service.data.attributes.description)"></td>
                         <td>{{ servico.days }} dias úteis</td>
-                        <td>R$ {{ servico.price || servico.service.data.attributes.price }}</td>
+                        <td>{{ (servico.price || servico.service.data.attributes.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
                     </tr>
                     </tbody>
                     <tfoot v-if="bid_total > 0">
@@ -238,6 +238,10 @@
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
+    table ul li{
+        margin-bottom:10px;
+    }
+    table ul li:last-child{margin:0}
     table{width:100%}
     table th{text-align: left;}
     table td,
@@ -265,8 +269,10 @@
     }
 </style>
 <script>
-  import axios from 'axios';
-  import { QrCodePix } from 'qrcode-pix';
+  import axios from 'axios'
+  import { QrCodePix } from 'qrcode-pix'
+  import marked from 'marked';
+
   
   export default {
     name: 'ListaRegistros',
@@ -309,6 +315,9 @@
 
             this.loading = false
             
+        },
+        markdownToHtml(description) {            
+            return marked(description)
         },
         async calcTotals(){
             
