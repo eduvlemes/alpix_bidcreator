@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import App from './App.vue';
 import ListaRegistros from './components/ListaRegistros.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
@@ -13,4 +14,4 @@ const router = createRouter({
   ],
 });
 
-createApp(ListaRegistros).use(router).mount('#app');
+createApp(App).use(router).mount('#app');
