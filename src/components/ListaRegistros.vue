@@ -355,14 +355,15 @@
         },
         
         async getBid(){
-            this.parametro = this.$route.path.replace('/','');  
+            this.parametro = this.$route.params.id || this.$route.path.replace('/','')
+            console.log(this.parametro)
             if(this.parametro){
                 await axios.get(`https://strapi-production-f692.up.railway.app/api/bids?filters[key][$eq]=${this.parametro}&populate=deep`)
                 .then(response => {
                 this.bid = response.data.data[0].attributes;
                 this.bid_id = response.data.data[0].id;
                 this.paymentViable = this.bid.accepted 
-                console.log(this.bid)
+                //console.log(this.bid)
                 })
                 .catch(error => {
                 console.error(error);
@@ -381,5 +382,5 @@
     },
   };
   </script>
-  
+
   
