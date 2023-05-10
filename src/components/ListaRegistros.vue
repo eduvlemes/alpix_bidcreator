@@ -356,6 +356,7 @@
         
         async getBid(){
             this.parametro = this.$route.params.id || this.$route.path.replace('/','')
+            console.log(this.$route)
             console.log(this.parametro)
             if(this.parametro){
                 await axios.get(`https://strapi-production-f692.up.railway.app/api/bids?filters[key][$eq]=${this.parametro}&populate=deep`)
