@@ -32,7 +32,7 @@
             </div>
             <div v-if="bid.services">
                 <div class="hr"></div>
-                <section class="descricao-escopo">
+                <section class="lista-escopo">
                     <h2>Lista de <span class="text-styled">Tarefas</span></h2>
                     <table>
                     <thead>
@@ -129,6 +129,7 @@
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
     
+    .descricao-escopo p{line-height:30px;}
     .or{font-size:36px;font-weight: 700;}
     .row-payment{
         display:flex;
