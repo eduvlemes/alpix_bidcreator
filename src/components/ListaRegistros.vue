@@ -331,27 +331,25 @@
                     })
                 }
 
-                let PAGARMEAPIKEY = "ak_live_nCn5HCIpU4IYNcHEegKwPYEx2Ob49J"
-               
-                
-                await axios.post(`https://api.pagar.me/1/payment_links/?api_key=${PAGARMEAPIKEY}`,{
-                    name: '#'+ (this.bid_id + 500) + '_' + this.bid.client.data.attributes.name.toUpperCase().replaceAll(' ','_'),
-                    amount : this.formataValorPagarme(this.bid_total),
-                    items : items,
-                    payment_config:{
-                        boleto:{enabled:false},
-                        credit_card:{
-                            enabled:true,
-                            free_installments: this.bid.installments,
-                            max_installments: this.bid.installments
+                //GERA LINK PAGARME
+                await axios.post(`https://strapi-production-f692.up.railway.app/api/pagarme`,{
+                    data: {
+                        name: '#'+ (this.bid_id + 500) + '_' + this.bid.client.data.attributes.name.toUpperCase().replaceAll(' ','_'),
+                        amount : this.formataValorPagarme(this.bid_total),
+                        items : items,
+                        payment_config:{
+                            boleto:{enabled:false},
+                            credit_card:{
+                                enabled:true,
+                                free_installments: this.bid.installments,
+                                max_installments: this.bid.installments
+                            },
+                            default_payment_method: "credit_card"
                         },
-                        default_payment_method: "credit_card"
-                    },
-                    max_orders:1
-                })
-                .then(response => {
-                    console.log(response)
-                    this.pagarmePaymentLink = response.data.url
+                        max_orders:1
+                    }
+                }).then(response => {
+                    this.pagarmePaymentLink = response.data.data
                 })
             }
 
@@ -403,7 +401,8 @@
             const ano = this.bid_delivery_date.getFullYear()
             this.bid_delivery_date_formated  = `${dia}/${mes}/${ano}`
 
-            if(!this.bid.payment_base64){
+            
+            //if(!this.bid.payment_base64){
                 this.qrCodePix = await QrCodePix({
                     version: '01',
                     key: '35810898000148', //or any PIX key
@@ -419,7 +418,8 @@
             //this.qrCodePix = 
             
                 this.qrCodePixImage = await this.qrCodePix.base64()
-            }
+                this.bid.payment_base64 = this.qrCodePixImage
+            //}
 
             
         },
