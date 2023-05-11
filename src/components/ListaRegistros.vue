@@ -46,7 +46,7 @@
                     <tbody>
                     <tr v-for="(servico, index) in bid.services" :key="index">
                         <td>{{ servico.service.data && servico.service.data.attributes.title }}</td>
-                        <td v-html="markdownToHtml(servico.service.data && servico.service.data.attributes.description)"></td>
+                        <td v-html="markdownToHtml(servico.override_description || (servico.service.data && servico.service.data.attributes.description))"></td>
                         <td>{{ servico.days }} dias úteis</td>
                         <td>{{ (servico.price || servico.service.data.attributes.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
                     </tr>
