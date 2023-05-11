@@ -12,110 +12,125 @@
     <div v-if="bid_id && !loading">
         <div class="container">
             <!-- Cabeçalho da Proposta -->
-            <div class="cabecalho-proposta">
-                <div>
-                    <h2>Dados do <span class="text-styled">Contratante</span></h2>
-                    <div v-if="bid.client && bid.client.data && bid.client.data.attributes">
-                        <p v-if="bid.client.data.attributes.name"><strong>Cliente:</strong>{{ bid.client.data.attributes.name }}</p>
-                        <p v-if="bid.client.data.attributes.company"><strong>Empresa:</strong>{{ bid.client.data.attributes.company }}</p>
-                        <p v-if="bid.client.data.attributes.email"><strong>E-mail:</strong>{{ bid.client.data.attributes.email }}</p>
-                        <p v-if="bid.client.data.attributes.phone"><strong>Telefone:</strong>{{ bid.client.data.attributes.phone }}</p>
-                    </div>
-                </div>
-            </div>
-            <div v-if="bid.scope">
-                <div class="hr"></div>
-                <section class="descricao-escopo">
-                    <h2>Escopo do <span class="text-styled">Projeto</span></h2>
-                    <p>{{ bid.scope }}</p>
-                </section>
-            </div>
-            <div v-if="bid.services">
-                <div class="hr"></div>
-                <section class="lista-escopo">
-                    <h2>Lista de <span class="text-styled">Tarefas</span></h2>
-                    <table>
-                    <thead>
-                    <tr>
-                        <th>Serviço</th>
-                        <th>Descrição</th>
-                        <th>Prazo</th>
-                        <th>Valor</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr v-for="(servico, index) in bid.services" :key="index">
-                        <td>{{ servico.service.data && servico.service.data.attributes.title }}</td>
-                        <td v-html="markdownToHtml(servico.override_description || (servico.service.data && servico.service.data.attributes.description))"></td>
-                        <td>{{ servico.days }} dias úteis</td>
-                        <td>{{ (servico.price || servico.service.data.attributes.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
-                    </tr>
-                    </tbody>
-                    <tfoot v-if="bid_total > 0">
-                    <tr>
-                        <td colspan="3">Data de Entrega:</td>
-                        <td><u>{{ bid_delivery_date_formated }}</u></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">Valor Total:</td>
-                        <td>{{ bid_total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">Valor Parcelado:</td>
-                        <td><b>{{bid.installments}}x</b> de <b>{{ (bid_total / bid.installments).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b><br><small>sem juros</small></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3">Valor à Vista:</td>
-                        <td>{{ (bid_total * bid_atsight).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
-                    </tr>
-                    
-                    </tfoot>
-                </table>
-                </section>
-                <div class="hr"></div>
-                <div v-if="paymentViable == null" class="aceite">
-                    <h2>Aceitar <span class="text-styled">Proposta</span>?</h2>
+            <div :class="bid.paid ? 'confirmado' : ''">
+                <div class="cabecalho-proposta">
                     <div>
-                        <button type="button" @click="atualizarProposta(false)"><i class="fa fa-times" aria-hidden="true"></i> Não</button>
-                        <button type="button" @click="atualizarProposta(true)" class="aceitar"><i class="fa fa-check" aria-hidden="true"></i> Sim! Prosseguir para pagamento</button>
+                        <h2>Dados do <span class="text-styled">Contratante</span></h2>
+                        <div v-if="bid.client && bid.client.data && bid.client.data.attributes">
+                            <p v-if="bid.client.data.attributes.name"><strong>Cliente:</strong>{{ bid.client.data.attributes.name }}</p>
+                            <p v-if="bid.client.data.attributes.company"><strong>Empresa:</strong>{{ bid.client.data.attributes.company }}</p>
+                            <p v-if="bid.client.data.attributes.email"><strong>E-mail:</strong>{{ bid.client.data.attributes.email }}</p>
+                            <p v-if="bid.client.data.attributes.phone"><strong>Telefone:</strong>{{ bid.client.data.attributes.phone }}</p>
+                        </div>
                     </div>
                 </div>
-                <div v-if="paymentViable">
-                    <h2>Dados para <span class="text-styled">Pagamento</span></h2>
-                    <div class="row-payment">
-                        <div class="card-credit">
-                            <strong>{{ bid_total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</strong>
-                            <b>{{bid.installments}}x</b> de <b>{{ (bid_total / bid.installments).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b><br><small>sem juros</small>
-                            <br><br>
-                            <a class="payLink" :href="pagarmePaymentLink" target="_blank">
-                                <i class="fa fa-credit-card"></i>Pagar com Cartão de Crédito
-                            </a>
+                <div v-if="bid.scope">
+                    <div class="hr"></div>
+                    <section class="descricao-escopo">
+                        <h2>Escopo do <span class="text-styled">Projeto</span></h2>
+                        <p>{{ bid.scope }}</p>
+                    </section>
+                </div>
+                <div v-if="bid.services">
+                    <div class="hr"></div>
+                    <section class="lista-escopo">
+                        <h2>Lista de <span class="text-styled">Tarefas</span></h2>
+                        <table>
+                        <thead>
+                        <tr>
+                            <th>Serviço</th>
+                            <th>Descrição</th>
+                            <th>Prazo</th>
+                            <th>Valor</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr v-for="(servico, index) in bid.services" :key="index">
+                            <td>{{ servico.service.data && servico.service.data.attributes.title }}</td>
+                            <td v-html="markdownToHtml(servico.override_description || (servico.service.data && servico.service.data.attributes.description))"></td>
+                            <td>{{ servico.days }} dias úteis</td>
+                            <td>{{ (servico.price || servico.service.data.attributes.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
+                        </tr>
+                        </tbody>
+                        <tfoot v-if="bid_total > 0">
+                        <tr>
+                            <td colspan="3">Data de Entrega:</td>
+                            <td><u>{{ bid_delivery_date_formated }}</u></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Valor Total:</td>
+                            <td>{{ bid_total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Valor Parcelado:</td>
+                            <td><b>{{bid.installments}}x</b> de <b>{{ (bid_total / bid.installments).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b><br><small>sem juros</small></td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">Valor à Vista:</td>
+                            <td>{{ (bid_total * bid_atsight).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
+                        </tr>
+                        
+                        </tfoot>
+                    </table>
+                    </section>
+                    <div class="hr"></div>
+                    <div v-if="paymentViable == null" class="aceite">
+                        <h2>Aceitar <span class="text-styled">Proposta</span>?</h2>
+                        <div>
+                            <button type="button" @click="atualizarProposta(false)"><i class="fa fa-times" aria-hidden="true"></i> Não</button>
+                            <button type="button" @click="atualizarProposta(true)" class="aceitar"><i class="fa fa-check" aria-hidden="true"></i> Sim! Prosseguir para pagamento</button>
+                        </div>
+                    </div>
+                    <div v-if="paymentViable && bid.paid == null">
+                        <h2>Dados para <span class="text-styled">Pagamento</span></h2>
+                        <div class="row-payment">
+                            <div class="card-credit">
+                                <strong>{{ bid_total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</strong>
+                                <b>{{bid.installments}}x</b> de <b>{{ (bid_total / bid.installments).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b><br><small>sem juros</small>
+                                <br><br>
+                                <a class="payLink" :href="pagarmePaymentLink" target="_blank">
+                                    <i class="fa fa-credit-card"></i>Pagar com Cartão de Crédito
+                                </a>
 
-                        </div>
-                        <div class="or">
-                            ou
-                        </div>
-                        <div class="card-pix">
-                            <img v-if="bid.payment_base64" :src="bid.payment_base64"/>
-                            <strong>{{ (bid_total * bid_atsight).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</strong>
-                            <small>{{(bid_total - (bid_total * bid_atsight)).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }} de desconto</small>
-                            <br>
-                            <p>
-                                <b>Banco</b>077 - Inter<br><br>
-                                <b>Agência</b>0001<br><br>
-                                <b>Conta</b>47532386<br><br>
-                                <b>CNPJ/PIX</b>35.810.898/0001-48<br><br>
-                                <b>Favorecido</b>Eduardo Vieira Lemes<br><br>
+                            </div>
+                            <div class="or">
+                                ou
+                            </div>
+                            <div class="card-pix">
+                                <img v-if="bid.payment_base64" :src="bid.payment_base64"/>
+                                <strong>{{ (bid_total * bid_atsight).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</strong>
+                                <small v-if="bid.discount_at_sight > 0">{{(bid_total - (bid_total * bid_atsight)).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }} de desconto</small>
+                                <br>
+                                <p>
+                                    <b>Banco</b>077 - Inter<br><br>
+                                    <b>Agência</b>0001<br><br>
+                                    <b>Conta</b>47532386<br><br>
+                                    <b>CNPJ/PIX</b>35.810.898/0001-48<br><br>
+                                    <b>Favorecido</b>Eduardo Vieira Lemes<br><br>
 
-                            </p>
-                            <a class="payLink" :href="'https://api.whatsapp.com/send/?phone=5511989297291&text=*[Pagamento Realizado]*%0A%0AOlá! Gostaria de informar que o pagamento do valor de *'+ (bid_total * bid_atsight).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) +'* referente a proposta *' + (bid_id + 500) + '* foi realizado via PIX/Transferência.'" target="_blank">
-                                <i class="fa fa-check" aria-hidden="true"></i>Confirmar Pagamento
-                            </a>
+                                </p>
+                                
+                                <!-- <a class="payLink" :href="'https://api.whatsapp.com/send/?phone=5511989297291&text=*[Pagamento Realizado]*%0A%0AOlá! Gostaria de informar que o pagamento do valor de *'+ (bid_total * bid_atsight).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }) +'* referente a proposta *' + (bid_id + 500) + '* foi realizado via PIX/Transferência.'" target="_blank">
+                                    <i class="fa fa-check" aria-hidden="true"></i>Confirmar Pagamento
+                                </a> -->
+                            </div>
                         </div>
+                        <div class="hr"></div>
+                        <div v-if="bid.paid == null" class="aceite">
+                            <h2>Pagamento <span class="text-styled">Realizado</span>?</h2>
+                            <div>
+                                <button type="button" @click="confirmarPagamento()" class="aceitar"><i class="fa fa-check" aria-hidden="true"></i> Sim! Confirmar agendamento</button>
+                            </div>
+                        </div>                    
                     </div>
                 </div>
             </div>
-            
+            <div v-if="bid.paid == true">
+                <section class="descricao-escopo">
+                    <h2>Projeto <span class="text-styled">Confirmado!</span></h2>
+                    <p>Agora que suas demandas foram confirmadas, nossa equipe já adicionou suas tarefas em nossa agenda.<br>Caso alguma informação adicional tenha sido solicitada durante o processo de contratação, por favor, encaminhe para <a href="mailto:eduardo@alpix.dev">eduardo@alpix.dev</a>.<br><br>Sua nota fiscal será emitida no máximo até o dia 10 do mês seguinte. No entanto, se precisar antes dessa data, pedimos gentilmente que solicite ao responsável pelo andamento do seu projeto.</p>
+                </section>  
+            </div>
         </div>
     </div>
     <div class="loading" v-else>
@@ -129,6 +144,7 @@
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
     
+    .confirmado{opacity:.5}
     .descricao-escopo p{line-height:30px;}
     .or{font-size:36px;font-weight: 700;}
     .row-payment{
@@ -374,6 +390,26 @@
             this.loading = false
             
         },
+        async confirmarPagamento(){
+            this.loading = true
+
+            await axios.put(`https://strapi-production-f692.up.railway.app/api/bids/${this.bid_id}`,{
+                data: {
+                    paid:true,
+                    delivery_date:this.bid_delivery_date
+                }
+            })
+            .then(response => {
+                console.log(response.data)
+                this.bid.paid = true
+                this.bid.delivery_date = this.bid_delivery_date
+            })
+            .catch(error => {
+                console.error(error);
+            });
+            this.loading = false
+            
+        },
         markdownToHtml(description) {            
             return marked(description)
         },
@@ -387,6 +423,8 @@
                 this.bid_workingDays = this.bid_workingDays + this.bid.services[i].days
             }
 
+
+            
             while (this.bid_workingDaysSum < this.bid_workingDays) {
                 this.bid_delivery_date.setDate(this.bid_delivery_date.getDate() + 1); // avançar um dia
 
@@ -397,10 +435,17 @@
                 }
             }
 
+            if(this.bid.delivery_date){
+                this.bid_delivery_date = new Date(this.bid.delivery_date)
+                this.bid_delivery_date.setDate(this.bid_delivery_date.getDate() + 1)
+            }
+
             const dia = this.bid_delivery_date.getDate().toString().padStart(2, '0')
             const mes = (this.bid_delivery_date.getMonth() + 1).toString().padStart(2, '0')
             const ano = this.bid_delivery_date.getFullYear()
             this.bid_delivery_date_formated  = `${dia}/${mes}/${ano}`
+
+            
 
             
             //if(!this.bid.payment_base64){
