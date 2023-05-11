@@ -127,7 +127,7 @@
             </div>
             <div v-if="bid.paid == true">
                 <section class="descricao-escopo">
-                    <h2>Projeto <span class="text-styled">Confirmado!</span></h2>
+                    <h2>Projeto <span class="text-styled">Confirmado!</span> 🚀</h2>
                     <p>Agora que suas demandas foram confirmadas, nossa equipe já adicionou suas tarefas em nossa agenda.<br>Caso alguma informação adicional tenha sido solicitada durante o processo de contratação, por favor, encaminhe para <a href="mailto:eduardo@alpix.dev">eduardo@alpix.dev</a>.<br><br>Sua nota fiscal será emitida no máximo até o dia 10 do mês seguinte. No entanto, se precisar antes dessa data, pedimos gentilmente que solicite ao responsável pelo andamento do seu projeto.</p>
                 </section>  
             </div>
