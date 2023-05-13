@@ -2,7 +2,7 @@
     <header class="cabecalho-geral">
         <div class="container">
             <img src="https://www.alpix.dev/wp-content/uploads/2022/04/logo_w.svg" alt="Logo da Empresa">
-            <div>
+            <div class="d-none d-md-block">
                 <p><i class="fa fa-map-marker" aria-hidden="true"></i>Av. Paulista, 171, Andar 4 - São Paulo - SP</p>
                 <p><i class="fa fa-phone" aria-hidden="true"></i> +55 (11) 98929-7291</p>
                 <p><i class="fa fa-envelope" aria-hidden="true"></i>eduardo@alpix.dev</p>
@@ -35,43 +35,45 @@
                     <div class="hr"></div>
                     <section class="lista-escopo">
                         <h2>Lista de <span class="text-styled">Tarefas</span></h2>
-                        <table>
-                        <thead>
-                        <tr>
-                            <th>Serviço</th>
-                            <th>Descrição</th>
-                            <th>Prazo</th>
-                            <th>Valor</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-for="(servico, index) in bid.services" :key="index">
-                            <td>{{ servico.service.data && servico.service.data.attributes.title }}</td>
-                            <td v-html="markdownToHtml(servico.override_description || (servico.service.data && servico.service.data.attributes.description))"></td>
-                            <td>{{ servico.days }} dias úteis</td>
-                            <td>{{ (servico.price || servico.service.data.attributes.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
-                        </tr>
-                        </tbody>
-                        <tfoot v-if="bid_total > 0">
-                        <tr>
-                            <td colspan="3">Data de Entrega:</td>
-                            <td><u>{{ bid_delivery_date_formated }}</u></td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">Valor Total:</td>
-                            <td>{{ bid_total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">Valor Parcelado:</td>
-                            <td><b>{{bid.installments}}x</b> de <b>{{ (bid_total / bid.installments).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b><br><small>sem juros</small></td>
-                        </tr>
-                        <tr>
-                            <td colspan="3">Valor à Vista:</td>
-                            <td>{{ (bid_total * bid_atsight).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
-                        </tr>
-                        
-                        </tfoot>
-                    </table>
+                        <div class="table-responsive">
+                            <table>
+                                <thead>
+                                <tr>
+                                    <th>Serviço</th>
+                                    <th>Descrição</th>
+                                    <th>Prazo</th>
+                                    <th>Valor</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr v-for="(servico, index) in bid.services" :key="index">
+                                    <td>{{ servico.service.data && servico.service.data.attributes.title }}</td>
+                                    <td v-html="markdownToHtml(servico.override_description || (servico.service.data && servico.service.data.attributes.description))"></td>
+                                    <td>{{ servico.days }} dias úteis</td>
+                                    <td>{{ (servico.price || servico.service.data.attributes.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
+                                </tr>
+                                </tbody>
+                                <tfoot v-if="bid_total > 0">
+                                <tr>
+                                    <td colspan="3">Data de Entrega:</td>
+                                    <td><u>{{ bid_delivery_date_formated }}</u></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Valor Total:</td>
+                                    <td>{{ bid_total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Valor Parcelado:</td>
+                                    <td><b>{{bid.installments}}x</b> de <b>{{ (bid_total / bid.installments).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b><br><small>sem juros</small></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="3">Valor à Vista:</td>
+                                    <td>{{ (bid_total * bid_atsight).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</td>
+                                </tr>
+                                
+                                </tfoot>
+                            </table>
+                        </div>
                     </section>
                     <div class="hr"></div>
                     <div v-if="paymentViable == null" class="aceite">
@@ -143,6 +145,7 @@
 <style>
     @import url('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.css');
     @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+    
     
     .confirmado{opacity:.5}
     .descricao-escopo p{line-height:30px;}
@@ -284,6 +287,21 @@
         /* body{padding:10px} */
         .container{max-width:100%;padding:0 30px}
     }
+
+    @media(max-width:990px){
+        .cabecalho-geral .container{
+            justify-content:center;
+        }
+        .cabecalho-geral .container img{height:36px}
+        .cabecalho-geral{margin-bottom:15px}
+        .hr{margin:20px 0}
+
+        .aceite{gap:30px}
+        .aceite div,
+        .aceite{flex-direction:column;justify-content:flex-start}
+    }
+
+    
 </style>
 <script>
   import axios from 'axios'

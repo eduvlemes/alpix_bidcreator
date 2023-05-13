@@ -3,6 +3,11 @@ import App from './App.vue';
 import ListaRegistros from './components/ListaRegistros.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
+import 'bootstrap/dist/css/bootstrap.css'
+
+import 'bootstrap'
+
+
 const router = createRouter({
   history: createWebHistory(),
   routes: [
