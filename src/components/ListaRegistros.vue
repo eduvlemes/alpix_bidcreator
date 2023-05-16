@@ -79,7 +79,7 @@
                     <div v-if="paymentViable == null" class="aceite">
                         <h2>Aceitar <span class="text-styled">Proposta</span>?</h2>
                         <div>
-                            <button type="button" @click="atualizarProposta(false)"><i class="fa fa-times" aria-hidden="true"></i> Não</button>
+                            <!-- <button type="button" @click="atualizarProposta(false)"><i class="fa fa-times" aria-hidden="true"></i> Não</button> -->
                             <button type="button" @click="atualizarProposta(true)" class="aceitar"><i class="fa fa-check" aria-hidden="true"></i> Sim! Prosseguir para pagamento</button>
                         </div>
                     </div>
@@ -297,9 +297,24 @@
         .cabecalho-geral{margin-bottom:15px}
         .hr{margin:20px 0}
 
-        .aceite{gap:30px}
+        .aceite{gap:15px}
         .aceite div,
-        .aceite{flex-direction:column;justify-content:flex-start}
+        .aceite{flex-direction:column;justify-content:flex-start;align-items:flex-start}
+
+        .table-responsive thead{display:none}
+        
+        .table-responsive tfoot tr{display:flex}
+        .table-responsive tbody tr{display: flex;flex-direction: column;}
+        .table-responsive tbody tr td{display: flex;width: 100%!important;}
+
+        .table-responsive tbody tr td ul{padding-left:15px;margin: 0;}
+        .table-responsive tbody tr td:nth-child(3):before{content:"Prazo: ";font-weight:bold}
+        .table-responsive tbody tr td:nth-child(4):before{content:"Valor: ";font-weight:bold}
+        .table-responsive tfoot tr td{padding-left:0;padding-bottom:0}
+        .table-responsive tfoot tr td br{display:none}
+        .table-responsive tfoot tr td br+small{margin-left:5px;}
+
+        .table-responsive tfoot tr:last-child td{line-height:36px;}
     }
 
     
