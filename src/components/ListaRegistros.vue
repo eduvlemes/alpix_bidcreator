@@ -271,6 +271,7 @@
     table tbody tr td:first-child{font-weight:bold}
     table tbody tr td:last-child{text-align: right;}
     table tbody tr:nth-child(odd) td{
+        
         background:#f2f2f2
     }
     table tfoot td[colspan="3"]{font-weight:600}
