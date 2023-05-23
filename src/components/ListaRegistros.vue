@@ -523,39 +523,6 @@
 
                 this.calcTotals()
             }
-
-            if(this.parametro == 123456){
-                // let PAGARMEAPIKEY = ""
-                // let PAGARMECKEY = ""
-                let PAGARMEAPIKEY = "ak_live_nCn5HCIpU4IYNcHEegKwPYEx2Ob49J"
-                // let PAGARMECKEY = "ek_live_dfOrhOGhS65igcwCps5S8gFMNdBMWN"
-                
-                // await pagarme.client.connect({ 
-                //     api_key: PAGARMEAPIKEY,
-                // })
-                // .then(client => client.paymentLinks.create({
-                //     amount : this.bid_total,
-                //     items : items,
-                //     payment_config:{
-                //         boleto:{enabled:false},
-                //         credit_card:{
-                //             enabled:true,
-                //             free_installments: this.bid_installments,
-                //             max_installments: this.bid_installments
-                //         },
-                //         default_payment_method: "credit_card"
-                //     },
-                //     max_orders:1
-                // }).then(response => console.log(response))
-                // )
-                
-                // .then(paymentLinks => console.log(paymentLinks))
-                // .catch(error => console.log(JSON.stringify(error)))
-
-                
-
-                
-            }
         }
     },
     mounted(){
