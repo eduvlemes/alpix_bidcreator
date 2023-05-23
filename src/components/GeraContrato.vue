@@ -29,6 +29,25 @@
 
             <h2>DO FORO</h2>
             <p>Cláusula 8ª. Para dirimir quaisquer controvérsias oriundas deste contrato, as partes elegem o foro da comarca de São Paulo.</p>
+
+            <div class="assinatura">
+                <div>
+                    <img src="/assinatura.png" height="50" style="margin-bottom:-20px"/><br>
+                    ________________________________________<br>
+                    <b>CONTRATADA</b><br>
+                    EDUARDO VIEIRA LEMES<br>
+                    CPF Nº 416.816.188-93<br>
+                    (ALPIX)
+                </div>
+                <div>
+                    
+                    ________________________________________<br>
+                    <b>CONTRATANTE</b><br>
+                    {{ contract.person_name  || '_PERSON_NAME_' }}<br>
+                    CPF Nº {{ contract.doc_cpf  || '_PERSON_DOC_' }}<br>
+                    ({{ contract.company_name  || '_COMPANY_NAME_' }})
+                </div>
+            </div>
         </div>
 
     </div>
@@ -49,7 +68,12 @@
         font-weight: bold!important;
     }
     .item_contrato{border: 1px solid #ccc!important;padding: 10px;}    
-
+    .assinatura{
+        margin-top: 5rem;
+        display:flex;
+        align-items: flex-end;
+        justify-content: space-around;
+    }
     
 </style>
 <script>
