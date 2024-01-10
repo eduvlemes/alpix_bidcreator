@@ -103,7 +103,7 @@
             </div>
             <div class="row pb-5 mb-5">
                 <div class="col-md-3">
-                    <h2>Pagamento</h2>
+                    <h2>Pagamento e termos legais</h2>
                 </div>
                 <div class="col-md-8 offset-md-1 termos">
                     <p><b>1. Estrutura de pagamento</b><span class="mt-2 d-block" v-html="markdownToHtml(proposta.payment_terms)"></span>                      
