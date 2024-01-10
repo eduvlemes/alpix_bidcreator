@@ -32,7 +32,7 @@
                         <h2>O projeto</h2>
                     </div>
                     <div class="col-md-8 offset-md-1">
-                        <p>X</p>
+                        <p class="about" v-html="markdownToHtml(proposta.about)"></p>
                     </div>
                 </div>
             </div>            
@@ -53,7 +53,7 @@
                             <div class="row align-items-start justify-content-between">
                                 <div class="col">
                                     <b class=" mb-2 d-block">{{service.service.data.attributes.title}}</b>
-                                    <p>{{ service.override_description || (servico.service.data && servico.service.data.attributes.description) }}</p>                            
+                                    <p>{{ service.override_description || (service.service.data && service.service.data.attributes.description) }}</p>                            
                                 </div>
                                 <div class="col-auto">{{ (service.price || service.service.data.attributes.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</div>
                             </div>                            
@@ -63,7 +63,7 @@
                                 <div class="col">
                                     <b class=" mb-2 d-block">Total</b>
                                 </div>
-                                <div class="col-auto"><span class=" mb-2 d-block">em até <b>12x</b> de <b>{{ (bid_total /12).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b> sem juros</span></div>
+                                <div class="col-auto"><span class=" mb-2 d-block text-right"><b>{{ (bid_total).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }} </b><br><small>em até <b>12x</b> de <b>{{ (bid_total /12).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b> sem juros</small></span></div>
                             </div>  
                             <div class="row align-items-start justify-content-between" style="font-size:18px;">
                                 <div class="col">
@@ -106,8 +106,8 @@
                     <h2>Pagamento</h2>
                 </div>
                 <div class="col-md-8 offset-md-1 termos">
-                    <p><b>1. Estrutura de pagamento:</b>                        
-                        <div class="row mt-5 align-items-center justify-content-center">
+                    <p><b>1. Estrutura de pagamento</b><span class="mt-2 d-block" v-html="markdownToHtml(proposta.payment_terms)"></span>                      
+                        <div class="row  align-items-center justify-content-center">
                             <div class="col-auto">
                                 <img v-if="bid.payment_base64" :src="bid.payment_base64" style="height:150px"/>
                             </div>
@@ -141,6 +141,9 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
             </div>
         </div>
     </div>
+    <div v-else class="p-5">
+        Carregando proposta...
+    </div>
 </template>
     
 <style>
@@ -157,6 +160,7 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
     h2{font-weight: 600!important;}
     .border-radius-1{border-radius: .5rem;}
     .persons{}
+    .about p{margin-bottom: 1.5rem;}
     .persons b{
         display: block;
         font-size: 12px;
@@ -307,8 +311,8 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
             this.parametro = this.$route.params.id || this.$route.path.replace('/','')
             console.log(this.parametro)
             if(this.parametro){
-                //await axios.get(`https://strapi-production-f692.up.railway.app/api/proposals/${this.parametro}`)
-                await axios.get(`http://localhost:1337/api/proposals/?filters[id][$eq]=${this.parametro - 150}&populate=deep`)
+                await axios.get(`https://strapi-production-f692.up.railway.app/api/proposals/?filters[id][$eq]=${this.parametro - 150}&populate=deep`)
+                //await axios.get(`http://localhost:1337/api/proposals/?filters[id][$eq]=${this.parametro - 150}&populate=deep`)
                 .then(response => {   
                     
                     this.proposta = response.data.data[0].attributes
