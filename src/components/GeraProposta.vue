@@ -53,7 +53,7 @@
                             <div class="row align-items-start justify-content-between">
                                 <div class="col">
                                     <b class=" mb-2 d-block">{{service.service.data.attributes.title}}</b>
-                                    <p>{{ service.override_description || (service.service.data && service.service.data.attributes.description) }}</p>                            
+                                    <p v-html="markdownToHtml(service.override_description || (service.service.data && service.service.data.attributes.description))"></p>                            
                                 </div>
                                 <div class="col-auto">{{ (service.price || service.service.data.attributes.price).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</div>
                             </div>                            
