@@ -4,7 +4,7 @@
             <div class="container my-5">
                 <div class="row align-items-center mb-5 pb-5">
                     <div class="col ">
-                        <img src="https://www.alpix.dev/wp-content/uploads/2022/04/logo_w.svg" alt="Logo da Empresa">
+                        <img src="view-source:https://www.alpix.dev/assets/logo_w.svg" alt="Logo da Alpix">
                     </div>
                     <div class="col text-center">
                     
