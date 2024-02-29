@@ -1,4 +1,5 @@
 <template>
+    <div v-if="chave">{{ chave }}</div>
     <div class="main p-3" v-if="proposta && proposta.client">
         <div class="head border-radius-1 py-5 mb-5">
             <div class="container my-5">
@@ -142,7 +143,7 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
         </div>
     </div>
     <div v-else class="p-5">
-        Carregando proposta...
+        {{ aviso }}
     </div>
 </template>
     
@@ -217,7 +218,8 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
   import axios from 'axios'
   import { QrCodePix } from 'qrcode-pix'
   import marked from 'marked'
-
+  import CryptoJS from 'crypto-js';
+  import md5 from 'md5';
   
   export default {
     name: 'GeraProposta',
@@ -240,6 +242,8 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
         qrCodePix : false,
         qrCodePixImage:false,
         pagarmePaymentLink : false,
+        chave: '',
+        aviso:'Carregando proposta...'
       };
     },
     methods:{
@@ -309,8 +313,15 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
         
         async getBid(){
             this.parametro = this.$route.params.id || this.$route.path.replace('/','')
-            console.log(this.parametro)
-            if(this.parametro){
+            let key = this.$route.query.key;
+            if(this.$route.query.key == 'main'){
+                this.chave = md5(this.parametro);
+            }else{
+                this.chave = false;
+            }
+            
+            
+            if(md5(this.parametro).toString() == key || this.chave){
                 await axios.get(`https://strapi-production-f692.up.railway.app/api/proposals/?filters[id][$eq]=${this.parametro - 150}&populate=deep`)
                 //await axios.get(`http://localhost:1337/api/proposals/?filters[id][$eq]=${this.parametro - 150}&populate=deep`)
                 .then(response => {   
@@ -324,6 +335,8 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
                 });
 
                 this.calcTotals()
+            }else{
+                this.aviso = 'Chave inválida. Informe a chave correta para visualizar a proposta'
             }
         }
     },
