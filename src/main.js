@@ -3,6 +3,7 @@ import App from './App.vue';
 import ListaRegistros from './components/ListaRegistros.vue';
 import GeraContrato from './components/GeraContrato.vue';
 import GeraProposta from './components/GeraProposta.vue';
+import GetPayments from './components/GetPayments.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 
 import 'bootstrap/dist/css/bootstrap.css'
@@ -27,6 +28,11 @@ const router = createRouter({
       path: '/proposal/:id',
       name: 'GeraProposta',
       component: GeraProposta,
+    },
+    {
+      path: '/payments/:user',
+      name: 'GetPayments',
+      component: GetPayments,
     },
   ],
 });
