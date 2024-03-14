@@ -165,6 +165,10 @@
         margin: 0 0 3rem 0;
         font-size: 14px;
     }
+    .table-success, .table-success>td, .table-success>th {
+      background-color: #c3e6cb !important;
+  }
+  
 </style>
 
 <script>
@@ -185,7 +189,7 @@ export default {
     sumPaid() {
       // Calcular a soma dos valores pagos
       return this.filteredLaunches.reduce((total, launch) => {
-        if (!launch['Pago'] == "FALSO") {
+        if (launch['Pago'] != "FALSO") {
           return total + parseFloat(launch['Valor']);
         }
         return total;
