@@ -153,7 +153,7 @@
     .list .item{
         border-left: 4px solid #B932C8;
     }
-    .container{width: 990px;}
+    
 
     .pagamento{font-size: 12px;}
     .pagamento p{
