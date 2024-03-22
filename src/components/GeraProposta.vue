@@ -68,9 +68,9 @@
                             </div>  
                             <div class="row align-items-start justify-content-between" style="font-size:18px;">
                                 <div class="col">
-                                    <b class=" mb-2 d-block">Pagamento à vista (-8%)</b>
+                                    <b class=" mb-2 d-block">Pagamento à vista (-6%)</b>
                                 </div>
-                                <div class="col-auto"><b class=" mb-2 d-block">{{ (bid_total * 0.92).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b></div>
+                                <div class="col-auto"><b class=" mb-2 d-block">{{ (bid_total * 0.94).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b></div>
                             </div>                          
                         </div>
                         
