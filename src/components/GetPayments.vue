@@ -2,7 +2,7 @@
     
     <div class="main p-3">
         <div class="head border-radius-1 py-2 mb-5">
-            <div class="container my-5">
+            <div class="container-fluid my-5">
                 <div class="row align-items-center">
                     <div class="col ">
                         <img src="https://www.alpix.dev/assets/logo_w.svg" alt="Logo da Alpix">
@@ -20,7 +20,7 @@
         </div>
     </div>
     <div>
-      <div class="container">
+      <div class="container-fluid">
         <h3 class="mb-5 font-weight-bold" style="color:#000">Seus Pagamentos</h3>
         <div class="row mb-4 justify-content-between">
           <div class="col-5">
