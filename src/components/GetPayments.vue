@@ -26,14 +26,14 @@
           <div class="col-5">
             <!-- Caixa para a soma dos valores pagos -->
             <div class="row">
-              <div class="col-6">
+              <div class="col-auto">
                 <div class="card p-4">
                   <small>Pendente</small> 
                   <b class="h3">{{ sumPending }}</b>
                 </div>
                 
               </div>
-              <div class="col-6">
+              <div class="col-auto">
                 <div class="card p-4">
                   <small>Pago</small> 
                   <b class="h3 font-weight-bold" style="color:green">{{ sumPaid }}</b>
