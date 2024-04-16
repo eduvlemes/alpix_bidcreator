@@ -479,6 +479,7 @@
         markdownToHtml(description) {            
             return marked(description)
         },
+        
 
         setStepTo(step){
             localStorage.setItem(`apx_briefing`,JSON.stringify(this.briefing))
