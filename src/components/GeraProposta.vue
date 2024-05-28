@@ -68,9 +68,9 @@
                             </div>  
                             <div class="row align-items-start justify-content-between" style="font-size:18px;">
                                 <div class="col">
-                                    <b class=" mb-2 d-block">Pagamento à vista (-6%)</b>
+                                    <b class=" mb-2 d-block">Pagamento à vista (-4%)</b>
                                 </div>
-                                <div class="col-auto"><b class=" mb-2 d-block">{{ (bid_total * 0.94).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b></div>
+                                <div class="col-auto"><b class=" mb-2 d-block">{{ (bid_total * 0.96).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b></div>
                             </div>                          
                         </div>
                         
@@ -300,7 +300,7 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
                     transactionId: `Proposta Núm. ${this.bid_id + 150}`, //max 25 characters
                     message: '',
                     cep: '01311904',
-                    value: (this.bid_total * 0.92),
+                    value: (this.bid_total * 0.96),
                 });
 
             //console.log(qrCodePix.base64); // '00020101021126510014BR.GOV.BCB.PIX...'
