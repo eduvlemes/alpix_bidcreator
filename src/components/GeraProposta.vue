@@ -147,7 +147,7 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
     </div>
 </template>
     
-<style scoped>
+<style>
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
     @import url('https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css');
     body{font-family: 'Poppins', sans-serif!important;font-size:14px}
@@ -179,7 +179,7 @@ O suporte ao uso do sistema é gratuito por 30 dias a contar da entrega do proje
         
     }
     .project{}
-    .project p{font-size: 14px; line-height: 24px;    color: #fff;}
+    .project p{font-size: 14px; line-height: 24px;    color: #fff!important;}
 
     .box{
         border: 1px solid #ccc;
