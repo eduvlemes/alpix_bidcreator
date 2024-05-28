@@ -121,36 +121,122 @@
                 </div>
             </div>
         </div>
-        <div class="container" v-if="type == 'loja-virtual'">        
-            <span class="brad badge gradient py-2 px-3">Criação de Loja Virtual</span>
-            <h2 class="h4 mt-3 mb-4">Você chegou na faze mais importante do seu projeto: <b class="gradient text">a entrevista!</b></h2>
-            <p>É ela que vai determinar os detalhes da sua <b>loja virtual</b> e nos ajudar a alinhar suas expectativas.</p>
-            <p>Por isso, reserve um bom tempo para preencher as informações no formulário e detalhar ao máximo suas expectativas. Vai levar de 15 a 20 minutos e sugerimos que faça pelo computador.</p>
-            <div class="row my-5 align-items-center">
-                <div class="col">
-                    <div class="panel bg-black txt-white p-5" style="border-radius:15px">
-                        <h4 class="h5 mb-4 font-weight-bold">Tenha em mãos:</h4>
-                        <ul>
-                            <li>
-                                Logo e arquivos da sua marca;
-                            </li>
-                            <li>
-                                História da sua empresa;
-                            </li>
-                            <li>
-                                Outros sites para usar como referência;
-                            </li>
-                            <li>
-                                Fotos + informações de ao menos  4 produtos que você vende ou vai vender.
-                            </li>
-                            
-                        </ul>
+        <div class="container" v-if="type == 'loja-virtual'">   
+            <div v-if="step == 0">
+                <span class="brad badge gradient py-2 px-3">Criação de Loja Virtual</span>
+                <h2 class="h4 mt-3 mb-4">Você chegou na faze mais importante do seu projeto: <b class="gradient text">a entrevista!</b></h2>
+                <p>É ela que vai determinar os detalhes da sua <b>loja virtual</b> e nos ajudar a alinhar suas expectativas.</p>
+                <p>Por isso, reserve um bom tempo para preencher as informações no formulário e detalhar ao máximo suas expectativas. Vai levar de 15 a 20 minutos e sugerimos que faça pelo computador.</p>
+                <div class="row my-5 align-items-center">
+                    <div class="col">
+                        <div class="panel bg-black txt-white p-5" style="border-radius:15px">
+                            <h4 class="h5 mb-4 font-weight-bold">Tenha em mãos:</h4>
+                            <ul>
+                                <li>
+                                    Logo e arquivos da sua marca;
+                                </li>
+                                <li>
+                                    História da sua empresa;
+                                </li>
+                                <li>
+                                    Outros sites para usar como referência;
+                                </li>
+                                <li>
+                                    Fotos + informações de ao menos  4 produtos que você vende ou vai vender.
+                                </li>
+                                
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-auto offset-md-1">
+                        <button type="button" class="cta btn gradient btn-lg txt-white px-5 py-3" @click="setStepTo(step+1)">
+                            Iniciar minha entrevista!
+                        </button>
                     </div>
                 </div>
-                <div class="col-auto offset-md-1">
-                    <button type="button" class="cta btn gradient btn-lg txt-white px-5 py-3" @click="iniciarEntrevista()">
-                        Iniciar minha entrevista!
-                    </button>
+            </div>     
+            <div v-if="step != 0">
+                <div class="row justify-content-center">
+                    <div class="col-md-6">
+                        <div class="row stepper justify-content-between mb-5 align-items-end">
+                            <div class="col-auto"  :class="(step >= 1 ? 'placed' : ''),(step == 1 ? 'current' : '')">
+                                <div class="step_marker">
+                                    Identificação
+                                    <span class="pointer mt-2" :class="step >= 1 ? 'gradient' : ''"></span>
+                                </div>
+                            </div>
+                            <div class="col separator mb-2"></div>
+                            <div class="col-auto"  :class="(step >= 2 ? 'placed' : ''),(step == 2 ? 'current' : '')">
+                                <div class="step_marker">
+                                    Marca
+                                    <span class="pointer mt-2" :class="step >= 2 ? 'gradient' : ''"></span>
+                                </div>
+                            </div>
+                            <div class="col separator mb-2"></div>
+                            <div class="col-auto" :class="(step >= 3 ? 'placed' : ''),(step == 3 ? 'current' : '')">
+                                <div class="step_marker" >
+                                    Concorrentes
+                                    <span class="pointer mt-2" :class="step >= 3 ? 'gradient' : ''"></span>
+                                </div>
+                            </div>
+                            <div class="col separator  mb-2"></div>
+                            <div class="col-auto" :class="(step >= 4 ? 'placed' : ''),(step == 4 ? 'current' : '')">
+                                <div class="step_marker" >
+                                    Referências
+                                    <span class="pointer mt-2" :class="step >= 4 ? 'gradient' : ''"></span>
+                                </div>
+                            </div>
+                            <div class="col separator  mb-2"></div>
+                            <div class="col-auto" :class="(step >= 4 ? 'placed' : ''),(step == 4 ? 'current' : '')">
+                                <div class="step_marker" >
+                                    Acessos
+                                    <span class="pointer mt-2" :class="step >= 4 ? 'gradient' : ''"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>                
+                </div>
+                
+            </div>            
+            <div v-for="(section, index) in briefing['loja-virtual']" :key="'section_'+step">            
+                <div v-if="'step'+step === index">
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-md-6">
+                            <span class="brad badge gradient py-2 px-3">Criação de Logo</span>
+                            <h2 class="h4 mt-3 mb-4">{{section.title}}</h2>
+                            <p v-html="section.description"></p>
+                            <div class="row my-5 align-items-center">
+                                <div class="col-12">
+                                    <div class="form-group" v-for="item in section.questions" :key="step+'_logo_'+item.id">
+                                        <label :for="item.field" class="font-weight-bold" v-html="item.question"></label>   
+                                        <p class="hint" v-if="item.hint" v-html="item.hint"></p>
+                                        <input v-if="item.type == 'text'"  v-model="item.text_response" :type="item.type" class="form-control"  :id="item.field" placeholder="">
+                                        <textarea rows="4" v-if="item.type == 'textarea'"  v-model="item.text_response" :type="item.type" class="form-control"  :id="item.field" placeholder=""></textarea>
+                                        <input v-if="item.type == 'number'" v-model="item.number_response" :type="item.type" class="form-control"  :id="item.field" placeholder="">
+                                        <input v-if="item.type == 'mail'"  v-model="item.text_response" :type="item.type" class="form-control"  :id="item.field" placeholder="">
+                                        <input v-if="item.type == 'phone'"  v-model="item.text_response" :type="item.type" class="form-control"  :id="item.field" placeholder="">
+                                        <input v-if="item.type == 'file'"  @change="handleFileChange($event, index, item.question_id)" :type="item.type" multiple class="form-control"  :id="item.field" placeholder="">
+                                    </div>
+                                    
+                                </div>
+                            </div>
+                            <div class="row justify-content-between">
+                                <div class="col-auto">
+                                    <button v-if="step > 1" type="button" class="cta btn btn-light  btn-lg txt-black px-5 py-3" @click="setStepTo(step-1)">
+                                        Voltar
+                                    </button>
+                                </div>
+                                <div class="col-auto">
+                                    <button type="button" v-if="briefing['loja-virtual']['step'+(step+1)]" class="cta btn gradient btn-lg txt-white px-5 py-3" @click="setStepTo(step+1)">
+                                        Avançar
+                                    </button>
+                                    <button type="button" v-else class="cta btn gradient btn-lg txt-white px-5 py-3" @click="sendBriefing()">
+                                        Finalizar Entrevista
+                                    </button>                                
+                                </div>
+                            </div>
+                        </div>
+                    </div>            
                 </div>
             </div>
         </div>
@@ -468,6 +554,210 @@
                         }                            
                     ]
                 }  
+            },
+            "loja-virtual":{
+                step1:{
+                    title:"Quem é você?",
+                    description:"Informe os dados abaixo e mantenha seu cadastro atualizado.<br><br>Usaremos essas informações para entrar em contato, criar grupos ou o que for necessário e combinado durante o processo de desenvolvimento.",
+                    questions:[
+                        {
+                            question_id:1,
+                            field:'name',
+                            question:"Nome",
+                            type:'text',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:2,
+                            field:'email',
+                            question:"E-mail",
+                            type:'mail',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:3,
+                            field:'phone',
+                            question:"Telefone",
+                            type:'phone',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:4,
+                            field:'whatsapp',
+                            question:"Whatsapp",
+                            type:'phone',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        }
+                    ]
+                },
+                step2:{
+                    title:"Fale sobre sua marca",
+                    description:"Compartilhe detalhes sobre seu empreendimento.",
+                    questions:[
+                        {
+                            question_id:1,
+                            field:'name',
+                            question:"Nome da Empresa",
+                            type:'text',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:2,
+                            field:'name',
+                            question:"Qual o perfil do seu público?",
+                            type:'text',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[
+                                {option: 'Homens', checked:false},
+                                {option: 'Mulheres', checked:false},
+                                {option: 'Jovens +18 anos', checked:false},
+                                {option: 'Jovens Adultos +25 anos', checked:false},
+                                {option: 'Adultos +30 anos', checked:false},
+                                {option: 'Idosos +60 anos', checked:false},
+                                {option: 'Classe A', checked:false},
+                                {option: 'Classe B', checked:false},
+                                {option: 'Classe C', checked:false},
+                                {option: 'Classe D', checked:false}
+                            ]
+                        },
+                        {
+                            question_id:3,
+                            field:'history',
+                            question:"História da Empresa",
+                            type:'textarea',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:4,
+                            field:'colors_do',
+                            question:"Que cores podemos utilizar?",
+                            type:'text',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:5,
+                            field:'colors_dont',
+                            question:"Que cores devemos evitar?",
+                            type:'text',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:6,
+                            field:'files',
+                            question:"Arquivos",
+                            hint:"Anexe arquivos da marca já existentes, como logo ou manual de marca que já existam",
+                            type:'file',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        }
+                    ]
+                },
+                step3:{
+                    title:"Sobre seus concorrentes",
+                    description:"Fale um pouco sobre eles, dessa forma podemos entender o que pode funcionar ou não com seu público-alvo.",
+                    questions:[
+                        {
+                            question_id:1,
+                            field:'competitors',
+                            question:"Informe o nome ao menos 3 concorrentes",
+                            type:'text',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:2,
+                            field:'competitors_details',
+                            question:"O que você julga ser o diferencial de seus concorrentes?",
+                            type:'textarea',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        }                            
+                    ]
+                },
+                step4:{
+                    title:"Suas referências",
+                    description:"Compartilhe suas referências conosco!",
+                    questions:[
+                        {
+                            question_id:1,
+                            field:'references',
+                            question:"Informe o nome ao menos 3 logos de que gosta e explique o porque",
+                            type:'text',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:2,
+                            field:'reference_details',
+                            question:"O que você julga ser o diferencial dessas referências?",
+                            type:'textarea',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        }                            
+                    ]
+                },
+                step5:{
+                    title:"Seus acessos",
+                    description:"Informe abaixo os acessos aos serviços, sistemas e integrações atuais para que possamos integrá-los à sua loja virtual.",
+                    questions:[
+                        {
+                            question_id:1,
+                            field:'references',
+                            question:"Informe o nome ao menos 3 logos de que gosta e explique o porque",
+                            type:'text',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        },
+                        {
+                            question_id:2,
+                            field:'reference_details',
+                            question:"O que você julga ser o diferencial dessas referências?",
+                            type:'textarea',
+                            text_response:'',
+                            number_response:0,
+                            file_response:[],
+                            list_response:[]
+                        }                            
+                    ]
+                }    
             }
                       
         }            
@@ -479,7 +769,7 @@
         markdownToHtml(description) {            
             return marked(description)
         },
-        
+
 
         setStepTo(step){
             localStorage.setItem(`apx_briefing`,JSON.stringify(this.briefing))
