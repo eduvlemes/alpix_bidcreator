@@ -64,7 +64,7 @@
                                 <div class="col">
                                     <b class=" mb-2 d-block">Total</b>
                                 </div>
-                                <div class="col-auto"><span class=" mb-2 d-block text-right"><b>{{ (bid_total).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }} </b><br><small>em até <b>12x</b> de <b>{{ (bid_total /12).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b> sem juros</small></span></div>
+                                <div class="col-auto"><span class=" mb-2 d-block text-right"><b>{{ (bid_total).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }} </b><br><small>em até <b>6x</b> de <b>{{ (bid_total /6).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }) }}</b> sem juros</small></span></div>
                             </div>  
                             <div class="row align-items-start justify-content-between" style="font-size:18px;">
                                 <div class="col">
